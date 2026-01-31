@@ -130,7 +130,6 @@ export default function PostsPage() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-16"
           >
-            <p className="text-[#e8a917] italic text-lg mb-4">文章列表</p>
             <h1 className="text-[#733657] text-4xl md:text-5xl font-bold mb-6">
               A whole new world of knowledge
             </h1>
