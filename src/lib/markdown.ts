@@ -2,8 +2,10 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
-import html from 'remark-html'
 import remarkGfm from 'remark-gfm'
+import remarkRehype from 'remark-rehype'
+import rehypePrismPlus from 'rehype-prism-plus'
+import rehypeStringify from 'rehype-stringify'
 import { getPostViews } from './views'
 
 // 文章目录路径
@@ -100,30 +102,20 @@ export function getAllPosts(): MarkdownPost[] {
 }
 
 /**
- * 将 Markdown 内容转换为 HTML
+ * 将 Markdown 内容转换为 HTML（带代码高亮）
  */
 export async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark()
     .use(remarkGfm) // 支持 GFM（表格、任务列表等）
-    .use(html, { sanitize: false })
+    .use(remarkRehype, { allowDangerousHtml: true }) // 转换为 rehype AST
+    .use(rehypePrismPlus, { 
+      ignoreMissing: true,  // 忽略未知语言
+      showLineNumbers: false // 不显示行号
+    })
+    .use(rehypeStringify, { allowDangerousHtml: true }) // 转换为 HTML 字符串
     .process(markdown)
   
-  let htmlContent = result.toString()
-  
-  // 为代码块添加 Prism 所需的 class
-  // 将 <pre><code class="language-xxx"> 转换为 <pre class="language-xxx"><code class="language-xxx">
-  htmlContent = htmlContent.replace(
-    /<pre><code class="language-(\w+)">/g,
-    '<pre class="language-$1"><code class="language-$1">'
-  )
-  
-  // 处理没有指定语言的代码块
-  htmlContent = htmlContent.replace(
-    /<pre><code>/g,
-    '<pre class="language-text"><code class="language-text">'
-  )
-  
-  return htmlContent
+  return result.toString()
 }
 
 /**
