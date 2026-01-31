@@ -6,6 +6,16 @@ export const metadata: Metadata = {
   title: "Neysa's Blog - A Whole New World of Programming",
   description: 'A whole new world of programming',
   keywords: ['cuda', 'gpu'],
+  icons: {
+    icon: [
+      { url: '/jasmine.png', sizes: '32x32', type: 'image/png' },
+      { url: '/jasmine.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/jasmine.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/jasmine.png',
+  },
 }
 
 export default function RootLayout({
