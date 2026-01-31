@@ -335,7 +335,7 @@ export default function HomePage() {
           <Link 
             href="/posts" 
             className="inline-flex items-center gap-3 px-8 py-3 border border-[#733657]/40 text-[#e8a917] hover:bg-[#e8a917] hover:text-[#000101] transition-all duration-300 text-sm tracking-wider"
-            style={{ fontFamily: "'Reem Kufi', sans-serif" }}
+            style={{ fontFamily: "'Noto Serif SC', serif" }}
           >
             查看更多文章
             <ArrowRight className="w-4 h-4" />

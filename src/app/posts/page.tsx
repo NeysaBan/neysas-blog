@@ -110,13 +110,7 @@ export default function PostsPage() {
               ))}
             </nav>
 
-            {/* Menu Button */}
-            <button className="w-12 h-12 rounded-full bg-[#733657] flex items-center justify-center">
-              <div className="space-y-1.5">
-                <div className="w-5 h-0.5 bg-[#000101]"></div>
-                <div className="w-5 h-0.5 bg-[#000101]"></div>
-              </div>
-            </button>
+
           </div>
         </div>
       </header>
@@ -133,9 +127,6 @@ export default function PostsPage() {
             <h1 className="text-[#733657] text-4xl md:text-5xl font-bold mb-6">
               A whole new world of knowledge
             </h1>
-            <p className="text-gray-400 max-w-2xl">
-              A collection of insightful articles on various topics
-            </p>
           </motion.div>
 
           {/* Filters */}

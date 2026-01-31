@@ -4,6 +4,7 @@ import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
 import remarkGfm from 'remark-gfm'
+import { getPostViews } from './views'
 
 // 文章目录路径
 const postsDirectory = path.join(process.cwd(), 'content/posts')
@@ -77,7 +78,7 @@ export function getPostBySlug(slug: string): MarkdownPost | null {
       excerpt: frontMatter.excerpt || content.slice(0, 150) + '...',
       readTime: frontMatter.readTime || estimateReadTime(content),
       content,
-      views: Math.floor(Math.random() * 1000) + 100, // 模拟阅读量
+      views: getPostViews(slug), // 使用真实的浏览量
     }
   } catch (error) {
     console.error(`Error reading post ${slug}:`, error)

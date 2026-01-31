@@ -45,6 +45,7 @@ export default function ArticlePage() {
   const [post, setPost] = useState<Post | null>(null)
   const [loading, setLoading] = useState(true)
   const [allPosts, setAllPosts] = useState<Post[]>([])
+  const [viewsIncremented, setViewsIncremented] = useState(false)
 
   // 代码高亮 - 在内容加载后执行
   useEffect(() => {
@@ -55,6 +56,27 @@ export default function ArticlePage() {
       }, 100)
     }
   }, [post?.contentHtml])
+
+  // 增加浏览量 - 只在首次访问时执行
+  useEffect(() => {
+    const incrementViews = async () => {
+      if (post?.slug && !viewsIncremented) {
+        try {
+          const response = await fetch(`/api/views/${post.slug}`, {
+            method: 'POST'
+          })
+          const data = await response.json()
+          if (data.success) {
+            setPost(prev => prev ? { ...prev, views: data.views } : null)
+            setViewsIncremented(true)
+          }
+        } catch (error) {
+          console.error('Failed to increment views:', error)
+        }
+      }
+    }
+    incrementViews()
+  }, [post?.slug, viewsIncremented])
 
   useEffect(() => {
     const fetchPost = async () => {
