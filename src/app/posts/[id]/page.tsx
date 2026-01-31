@@ -24,6 +24,10 @@ import 'prismjs/components/prism-css'
 import 'prismjs/components/prism-markdown'
 import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
+import 'prismjs/components/prism-yaml'
+import 'prismjs/components/prism-docker'
+import 'prismjs/components/prism-git'
+import 'prismjs/components/prism-diff'
 
 interface Post {
   id: string

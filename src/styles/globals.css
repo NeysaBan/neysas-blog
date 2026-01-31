@@ -93,23 +93,149 @@ body {
 
 /* 代码高亮样式 */
 pre[class*="language-"] {
-  background: rgba(0, 1, 1, 0.8) !important;
+  background: rgba(10, 10, 15, 0.95) !important;
   border: 1px solid rgba(232, 169, 23, 0.3);
   border-radius: 10px;
-  padding: 1rem !important;
-  margin: 1rem 0 !important;
+  padding: 1.5rem !important;
+  margin: 1.5rem 0 !important;
   overflow-x: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
+
+/* 代码块语言标签 */
+pre[class*="language-"]::before {
+  content: attr(class);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 4px 12px;
+  font-size: 0.7rem;
+  color: #e8a917;
+  background: rgba(115, 54, 87, 0.5);
+  border-radius: 0 10px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+pre.language-javascript::before { content: 'JavaScript'; }
+pre.language-typescript::before { content: 'TypeScript'; }
+pre.language-jsx::before { content: 'JSX'; }
+pre.language-tsx::before { content: 'TSX'; }
+pre.language-python::before { content: 'Python'; }
+pre.language-java::before { content: 'Java'; }
+pre.language-go::before { content: 'Go'; }
+pre.language-rust::before { content: 'Rust'; }
+pre.language-sql::before { content: 'SQL'; }
+pre.language-bash::before { content: 'Bash'; }
+pre.language-shell::before { content: 'Shell'; }
+pre.language-json::before { content: 'JSON'; }
+pre.language-css::before { content: 'CSS'; }
+pre.language-html::before { content: 'HTML'; }
+pre.language-markdown::before { content: 'Markdown'; }
+pre.language-c::before { content: 'C'; }
+pre.language-cpp::before { content: 'C++'; }
+pre.language-cuda::before { content: 'CUDA'; }
+pre.language-text::before { content: 'Text'; }
 
 code[class*="language-"] {
   color: #e2e8f0 !important;
-  font-family: 'Fira Code', 'Consolas', monospace !important;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace !important;
+  font-size: 0.9rem !important;
+  line-height: 1.7 !important;
+  text-shadow: none !important;
 }
 
-/* Token 颜色 */
-.token.comment { color: #64748b !important; }
-.token.keyword { color: #733657 !important; }
-.token.string { color: #e8a917 !important; }
-.token.number { color: #e8a917 !important; }
-.token.function { color: #733657 !important; }
-.token.operator { color: #e8a917 !important; }
+/* 内联代码 */
+:not(pre) > code {
+  background: rgba(115, 54, 87, 0.3) !important;
+  color: #e8a917 !important;
+  padding: 0.2em 0.5em !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+  font-size: 0.85em !important;
+  border: 1px solid rgba(232, 169, 23, 0.2);
+}
+
+/* Token 颜色 - 阿拉丁主题 */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata { 
+  color: #6b7280 !important; 
+  font-style: italic;
+}
+
+.token.punctuation { 
+  color: #9ca3af !important; 
+}
+
+.token.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted { 
+  color: #f59e0b !important; 
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted { 
+  color: #e8a917 !important; 
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string { 
+  color: #fbbf24 !important; 
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword { 
+  color: #a855f7 !important; 
+}
+
+.token.function,
+.token.class-name { 
+  color: #ec4899 !important; 
+}
+
+.token.regex,
+.token.important,
+.token.variable { 
+  color: #f97316 !important; 
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/* 选中代码的样式 */
+pre[class*="language-"]::selection,
+pre[class*="language-"] *::selection,
+code[class*="language-"]::selection,
+code[class*="language-"] *::selection {
+  background: rgba(232, 169, 23, 0.3) !important;
+  text-shadow: none !important;
+}
