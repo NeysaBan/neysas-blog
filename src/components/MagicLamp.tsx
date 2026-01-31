@@ -418,13 +418,13 @@ export function MagicLamp({ onWish }: MagicLampProps) {
         
         {/* 提示文字 */}
         <motion.div
-          className="absolute -top-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: [0, 1, 0], y: [5, 0, 5] }}
+          className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+          initial={{ opacity: 0, y: 3 }}
+          animate={{ opacity: [0, 1, 0], y: [3, 0, 3] }}
           transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
         >
-          <span className="text-[#e8a917] text-xs" style={{ fontFamily: "'Amiri', serif" }}>
-            ✨ Come whisper to me \n whatever you want...
+          <span className="text-[#e8a917] text-xs" style={{ fontFamily: "'Lavishly Yours', cursive" }}>
+            ✨ Make a wish! ✨
           </span>
         </motion.div>
       </motion.div>
@@ -458,7 +458,7 @@ export function MagicLamp({ onWish }: MagicLampProps) {
               </motion.h3>
               <p 
                 className="text-gray-400 text-sm"
-                style={{ fontFamily: "'Amiri', serif" }}
+                style={{ fontFamily: "'Lavishly Yours', cursive" }}
               >
                 Say what you wish...
               </p>
@@ -474,10 +474,10 @@ export function MagicLamp({ onWish }: MagicLampProps) {
                 rows={3}
               />
               
-              <div className="flex gap-2">
+              <div className="flex gap-2 justify-center">
                 <motion.button
                   onClick={handleWish}
-                  className="flex-1 bg-gradient-to-r from-[#e8a917] to-[#d49915] text-[#000101] font-semibold py-2.5 px-4 rounded hover:from-[#f0b520] hover:to-[#e8a917] transition-all duration-300"
+                  className="bg-gradient-to-r from-[#e8a917] to-[#d49915] text-[#000101] font-semibold py-0.5 px-6 rounded hover:from-[#f0b520] hover:to-[#e8a917] transition-all duration-300"
                   style={{ fontFamily: "'Reem Kufi', sans-serif" }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -486,7 +486,8 @@ export function MagicLamp({ onWish }: MagicLampProps) {
                 </motion.button>
                 <motion.button
                   onClick={() => setShowWishForm(false)}
-                  className="px-4 py-2.5 border border-[#733657]/50 text-[#733657] hover:bg-[#733657]/20 hover:text-[#e8a917] transition-colors rounded"
+                  className="px-3 py-0.5 border border-[#733657]/50 text-[#733657] hover:bg-[#733657]/20 hover:text-[#e8a917] transition-colors rounded"
+                  style={{ fontFamily: "'Lavishly Yours', cursive" }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
