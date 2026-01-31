@@ -27,6 +27,26 @@ export default function PostsPage() {
   const [selectedCategory, setSelectedCategory] = useState('全部')
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [showFooter, setShowFooter] = useState(false)
+
+  // 滚动检测 - 只在页面滚动到底部时显示 Footer
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const scrollHeight = document.documentElement.scrollHeight
+      const clientHeight = document.documentElement.clientHeight
+      
+      // 判断是否滚动到底部（允许 50px 的误差）
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 50
+      setShowFooter(isAtBottom)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    // 初始检查
+    handleScroll()
+    
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // 获取文章数据
   const fetchArticles = useCallback(async (category?: string, search?: string) => {
@@ -252,8 +272,14 @@ export default function PostsPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#733657] py-4">
+      {/* Footer - 滚动到底部时显示 */}
+      <footer 
+        className={`fixed bottom-0 left-0 right-0 bg-[#733657] py-4 z-40 transition-all duration-500 ease-out ${
+          showFooter 
+            ? 'translate-y-0 opacity-100' 
+            : 'translate-y-full opacity-0'
+        }`}
+      >
         <div className="container mx-auto px-8">
           <div className="flex items-center justify-between">
             <p className="text-[#e8a917] text-sm">
@@ -273,6 +299,9 @@ export default function PostsPage() {
           </div>
         </div>
       </footer>
+      
+      {/* Footer 占位，防止内容被遮挡 */}
+      <div className="h-16"></div>
 
       {/* Magic Lamp */}
       <MagicLamp onWish={handleSearch} />

@@ -91,16 +91,18 @@ body {
   animation: glow 3s ease-in-out infinite alternate;
 }
 
-/* 代码高亮样式 */
+/* 代码高亮样式 - 茉莉公主主题 */
 pre[class*="language-"] {
-  background: rgba(10, 10, 15, 0.95) !important;
-  border: 1px solid rgba(232, 169, 23, 0.3);
-  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(0, 1, 1, 0.98), rgba(115, 54, 87, 0.15)) !important;
+  border: 1px solid rgba(232, 169, 23, 0.35);
+  border-radius: 12px;
   padding: 1.5rem !important;
   margin: 1.5rem 0 !important;
   overflow-x: auto;
   position: relative;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(232, 169, 23, 0.1);
 }
 
 /* 代码块语言标签 */
@@ -109,13 +111,14 @@ pre[class*="language-"]::before {
   position: absolute;
   top: 0;
   right: 0;
-  padding: 4px 12px;
+  padding: 4px 14px;
   font-size: 0.7rem;
   color: #e8a917;
-  background: rgba(115, 54, 87, 0.5);
-  border-radius: 0 10px 0 8px;
+  background: linear-gradient(135deg, rgba(115, 54, 87, 0.7), rgba(115, 54, 87, 0.4));
+  border-radius: 0 12px 0 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-weight: 500;
 }
 
 pre.language-javascript::before { content: 'JavaScript'; }
@@ -139,7 +142,7 @@ pre.language-cuda::before { content: 'CUDA'; }
 pre.language-text::before { content: 'Text'; }
 
 code[class*="language-"] {
-  color: #e2e8f0 !important;
+  color: #f5f0e8 !important;
   font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace !important;
   font-size: 0.9rem !important;
   line-height: 1.7 !important;
@@ -148,32 +151,40 @@ code[class*="language-"] {
 
 /* 内联代码 */
 :not(pre) > code {
-  background: rgba(115, 54, 87, 0.3) !important;
+  background: linear-gradient(135deg, rgba(115, 54, 87, 0.35), rgba(115, 54, 87, 0.2)) !important;
   color: #e8a917 !important;
   padding: 0.2em 0.5em !important;
-  border-radius: 4px !important;
+  border-radius: 5px !important;
   font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
   font-size: 0.85em !important;
-  border: 1px solid rgba(232, 169, 23, 0.2);
+  border: 1px solid rgba(232, 169, 23, 0.25);
+  text-shadow: 0 0 10px rgba(232, 169, 23, 0.2);
 }
 
-/* Token 颜色 - 阿拉丁主题 */
+/* ========================================
+   Token 颜色 - 茉莉公主/阿拉丁主题配色
+   主色调: 金色 #e8a917, 紫红 #733657
+   ======================================== */
+
+/* 注释 - 暗淡的紫色调 */
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata { 
-  color: #6b7280 !important; 
+  color: #8b7a9e !important; 
   font-style: italic;
 }
 
+/* 标点符号 - 柔和金色 */
 .token.punctuation { 
-  color: #9ca3af !important; 
+  color: #c9a96e !important; 
 }
 
 .token.namespace {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
+/* 数字、布尔值、常量 - 明亮金色 */
 .token.property,
 .token.tag,
 .token.boolean,
@@ -181,41 +192,63 @@ code[class*="language-"] {
 .token.constant,
 .token.symbol,
 .token.deleted { 
-  color: #f59e0b !important; 
+  color: #e8a917 !important; 
 }
 
+/* 字符串 - 柔和的沙金色 */
 .token.selector,
 .token.attr-name,
 .token.string,
 .token.char,
 .token.builtin,
 .token.inserted { 
-  color: #e8a917 !important; 
+  color: #d4a84b !important; 
 }
 
+/* 操作符 - 浅金色 */
 .token.operator,
 .token.entity,
 .token.url,
 .language-css .token.string,
 .style .token.string { 
-  color: #fbbf24 !important; 
+  color: #f0c674 !important; 
 }
 
+/* 关键字 - 紫红色（主题色） */
 .token.atrule,
 .token.attr-value,
 .token.keyword { 
-  color: #a855f7 !important; 
+  color: #b8628f !important; 
 }
 
+/* 函数名、类名 - 玫瑰紫色 */
 .token.function,
 .token.class-name { 
-  color: #ec4899 !important; 
+  color: #c77daa !important; 
 }
 
+/* 正则、变量 - 琥珀色 */
 .token.regex,
 .token.important,
 .token.variable { 
-  color: #f97316 !important; 
+  color: #daa520 !important; 
+}
+
+/* 参数 - 浅紫色 */
+.token.parameter {
+  color: #d4a4c4 !important;
+}
+
+/* 模块、导入 */
+.token.module,
+.token.control-flow {
+  color: #b8628f !important;
+}
+
+/* 装饰器 */
+.token.decorator,
+.token.annotation {
+  color: #c77daa !important;
 }
 
 .token.important,
@@ -231,11 +264,16 @@ code[class*="language-"] {
   cursor: help;
 }
 
-/* 选中代码的样式 */
+/* 选中代码的样式 - 金色高亮 */
 pre[class*="language-"]::selection,
 pre[class*="language-"] *::selection,
 code[class*="language-"]::selection,
 code[class*="language-"] *::selection {
-  background: rgba(232, 169, 23, 0.3) !important;
+  background: rgba(232, 169, 23, 0.35) !important;
   text-shadow: none !important;
+}
+
+/* 代码行悬停效果 */
+.code-line:hover {
+  background: rgba(232, 169, 23, 0.08);
 }
