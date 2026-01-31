@@ -8,6 +8,22 @@ import { getArticleById, articles as hardcodedArticles } from '@/data/articles'
 import { CodeHighlight } from '@/components/CodeHighlight'
 import { ArrowLeft, Calendar, Clock, User, Eye, Tag, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { MagicLamp } from '@/components/MagicLamp'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-jsx'
+import 'prismjs/components/prism-tsx'
+import 'prismjs/components/prism-python'
+import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-go'
+import 'prismjs/components/prism-rust'
+import 'prismjs/components/prism-sql'
+import 'prismjs/components/prism-bash'
+import 'prismjs/components/prism-json'
+import 'prismjs/components/prism-css'
+import 'prismjs/components/prism-markdown'
+import 'prismjs/components/prism-c'
+import 'prismjs/components/prism-cpp'
 
 interface Post {
   id: string
@@ -29,6 +45,16 @@ export default function ArticlePage() {
   const [post, setPost] = useState<Post | null>(null)
   const [loading, setLoading] = useState(true)
   const [allPosts, setAllPosts] = useState<Post[]>([])
+
+  // 代码高亮 - 在内容加载后执行
+  useEffect(() => {
+    if (post?.contentHtml) {
+      // 延迟执行以确保 DOM 已更新
+      setTimeout(() => {
+        Prism.highlightAll()
+      }, 100)
+    }
+  }, [post?.contentHtml])
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -111,10 +137,10 @@ export default function ArticlePage() {
             
             {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-12">
-              {['首页', '文章', '管理', '关于'].map((item) => (
+              {['首页', '文章', '关于'].map((item) => (
                 <Link
                   key={item}
-                  href={item === '首页' ? '/' : item === '文章' ? '/posts' : item === '管理' ? '/admin' : '#'}
+                  href={item === '首页' ? '/' : item === '文章' ? '/posts' : '#'}
                   className="text-[#733657] hover:text-[#e8a917] transition-colors duration-300 text-sm tracking-wider"
                 >
                   {item.toUpperCase()}
@@ -269,7 +295,7 @@ export default function ArticlePage() {
         <div className="container mx-auto px-8">
           <div className="flex items-center justify-between">
             <p className="text-[#e8a917] text-sm">
-              Copyright © 茉莉公主的神秘代码殿堂
+              Copyright © Neysa's Blog
             </p>
             <div className="flex items-center gap-4">
               <a href="#" className="w-8 h-8 rounded-full bg-[#000101] flex items-center justify-center text-[#e8a917] hover:bg-[#e8a917] hover:text-[#000101] transition-colors">
