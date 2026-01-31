@@ -107,7 +107,22 @@ export async function markdownToHtml(markdown: string): Promise<string> {
     .use(html, { sanitize: false })
     .process(markdown)
   
-  return result.toString()
+  let htmlContent = result.toString()
+  
+  // 为代码块添加 Prism 所需的 class
+  // 将 <pre><code class="language-xxx"> 转换为 <pre class="language-xxx"><code class="language-xxx">
+  htmlContent = htmlContent.replace(
+    /<pre><code class="language-(\w+)">/g,
+    '<pre class="language-$1"><code class="language-$1">'
+  )
+  
+  // 处理没有指定语言的代码块
+  htmlContent = htmlContent.replace(
+    /<pre><code>/g,
+    '<pre class="language-text"><code class="language-text">'
+  )
+  
+  return htmlContent
 }
 
 /**
