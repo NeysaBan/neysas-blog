@@ -3,7 +3,7 @@ import '@/styles/globals.css'
 import { MagicParticles } from '@/components/MagicParticles'
 
 export const metadata: Metadata = {
-  title: "Neysa's Blog - A Whole New World of Programming",
+  title: "Neysa's Blog",
   description: 'A whole new world of programming',
   keywords: ['cuda', 'gpu'],
   icons: {
