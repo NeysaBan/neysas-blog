@@ -267,7 +267,7 @@ export default function PostsPage() {
         <div className="container mx-auto px-8">
           <div className="flex items-center justify-between">
             <p className="text-[#e8a917] text-sm">
-              Copyright © 茉莉公主的神秘代码殿堂
+              Copyright © Neysa's Blog
             </p>
             <div className="flex items-center gap-4">
               <a href="#" className="w-8 h-8 rounded-full bg-[#000101] flex items-center justify-center text-[#e8a917] hover:bg-[#e8a917] hover:text-[#000101] transition-colors">

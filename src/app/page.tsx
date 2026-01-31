@@ -121,8 +121,8 @@ export default function HomePage() {
               
               {/* 副标题 */}
               <motion.p 
-                className="mt-6 md:mt-8 text-gray-400 text-lg md:text-xl max-w-md text-center lg:text-right"
-                style={{ fontFamily: "'Amiri', serif" }}
+                className="mt-10 md:mt-14 text-gray-400 text-xl md:text-xl max-w-md text-center lg:text-right"
+                style={{ fontFamily: "'Beth Ellen', cursive" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
@@ -132,7 +132,7 @@ export default function HomePage() {
               
               {/* 装饰线 */}
               <motion.div 
-                className="mt-4 flex items-center justify-center lg:justify-end w-full max-w-sm"
+                className="mt-4 md:mt-6 flex items-center justify-center lg:justify-end w-full max-w-sm"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
