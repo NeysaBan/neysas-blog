@@ -30,13 +30,23 @@ export function MagicParticles() {
     setParticles(initialParticles)
 
     const animateParticles = () => {
-      setParticles(prev => prev.map(particle => ({
-        ...particle,
-        x: particle.x + particle.speedX,
-        y: particle.y + particle.speedY,
-        x: particle.x > window.innerWidth ? 0 : particle.x < 0 ? window.innerWidth : particle.x,
-        y: particle.y > window.innerHeight ? 0 : particle.y < 0 ? window.innerHeight : particle.y,
-      })))
+      setParticles(prev => prev.map(particle => {
+        let newX = particle.x + particle.speedX
+        let newY = particle.y + particle.speedY
+        
+        // 边界检测
+        if (newX > window.innerWidth) newX = 0
+        else if (newX < 0) newX = window.innerWidth
+        
+        if (newY > window.innerHeight) newY = 0
+        else if (newY < 0) newY = window.innerHeight
+        
+        return {
+          ...particle,
+          x: newX,
+          y: newY,
+        }
+      }))
     }
 
     const interval = setInterval(animateParticles, 50)
