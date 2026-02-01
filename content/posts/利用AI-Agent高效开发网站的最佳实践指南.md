@@ -1,5 +1,5 @@
 ---
-title: "vibe coding: 向下管理的艺术"
+title: "和 AI 一起 coding : 向下管理的艺术"
 date: "2026-02-01"
 author: "Neysa"
 category: "Agent"
