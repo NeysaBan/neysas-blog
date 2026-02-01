@@ -9,13 +9,6 @@ tags:
 readTime: "3分钟"
 ---
 
-type: Post
-status: Published
-date: 2022/05/10
-tags: Base
-category: DL
-Brief: 搜索最优参数
-
 今天学会了怎么搜索最优参数！（是在NCF项目里实践的）
 
 [参考link](https://github.com/wandb/examples/tree/master/examples/pytorch/pytorch-cnn-fashion) （主要看看readme里怎么写的）
