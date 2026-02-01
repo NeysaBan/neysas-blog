@@ -1,14 +1,13 @@
-
 ---
 title: "关于cpu支持何种指令集的问题"
 date: "2023-03-29"
 author: "NeysaBan"
 category: "cpu"
 tags:
-- cpu
-- simd
-- x86
-- 环境
+ - cpu
+ - simd
+ - x86
+ - 环境
 readTime: "8分钟"
 ---
 

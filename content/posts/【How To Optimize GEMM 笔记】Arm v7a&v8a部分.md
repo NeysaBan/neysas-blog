@@ -1,14 +1,13 @@
-
 ---
-title: "【How To Optimize GEMM｜笔记】x86部分"
+title: "【How To Optimize GEMM｜笔记】arm部分"
 date: "2023-03-19"
 author: "NeysaBan"
 category: "cpu"
 excerpt: "neon SSE（Streaming SIMD Extensions）指令集优化gemm"
 tags:
-- cpu
-- simd
-- arm
+ - cpu
+ - simd
+ - arm
 readTime: "8分钟"
 ---
 

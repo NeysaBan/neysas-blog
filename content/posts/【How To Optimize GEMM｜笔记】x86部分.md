@@ -1,4 +1,3 @@
-
 ---
 title: "【How To Optimize GEMM｜笔记】x86部分"
 date: "2023-03-15"
@@ -6,9 +5,9 @@ author: "NeysaBan"
 category: "cpu"
 excerpt: "x86 SSE（Streaming SIMD Extensions）指令集优化gemm"
 tags:
-- cpu
-- simd
-- x86
+ - cpu
+ - simd
+ - x86
 readTime: "8分钟"
 ---
 

@@ -1,13 +1,12 @@
-
 ---
 title: "【ARM NEON SIMD入门 笔记】C语言编程与数据加载及回写"
 date: "2023-03-14"
 author: "NeysaBan"
 category: "cpu"
 tags:
-- cpu
-- simd
-- arm
+ - cpu
+ - simd
+ - arm
 readTime: "8分钟"
 ---
 

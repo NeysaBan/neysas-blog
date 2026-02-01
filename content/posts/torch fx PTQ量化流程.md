@@ -1,12 +1,11 @@
-
 ---
 title: "torch.fx PTQ量化流程"
 date: "2023-12-01"
 author: "NeysaBan"
 category: "量化"
 tags:
-- pytorch
-- 量化
+ - pytorch
+ - 量化
 readTime: "12分钟"
 ---
 

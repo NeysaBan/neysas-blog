@@ -3,8 +3,10 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 import remarkRehype from 'remark-rehype'
 import rehypePrismPlus from 'rehype-prism-plus'
+import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
 import { getPostViews } from './views'
 
@@ -102,12 +104,18 @@ export function getAllPosts(): MarkdownPost[] {
 }
 
 /**
- * 将 Markdown 内容转换为 HTML（带代码高亮）
+ * 将 Markdown 内容转换为 HTML（带代码高亮和数学公式）
  */
 export async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark()
     .use(remarkGfm) // 支持 GFM（表格、任务列表等）
+    .use(remarkMath) // 支持数学公式语法
     .use(remarkRehype, { allowDangerousHtml: true }) // 转换为 rehype AST
+    .use(rehypeKatex, {
+      strict: false, // 宽松模式，忽略未知命令
+      throwOnError: false, // 不抛出错误
+      output: 'html', // 输出 HTML
+    })
     .use(rehypePrismPlus, { 
       ignoreMissing: true,  // 忽略未知语言
       showLineNumbers: false // 不显示行号

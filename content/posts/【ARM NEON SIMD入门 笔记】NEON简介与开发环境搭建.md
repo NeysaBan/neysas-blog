@@ -4,9 +4,9 @@ date: 2023-03-13
 author: NeysaBan
 category: cpu
 tags:
-  - cpu
-  - simd
-  - arm
+ - cpu
+ - simd
+ - arm
 readTime: 10分钟
 ---
 

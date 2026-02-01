@@ -1,12 +1,11 @@
-
 ---
 title: "如何让笨拙的torch fx捕捉到你的模型图"
 date: "2024-01-19"
 author: "NeysaBan"
 category: "量化"
 tags:
-- pytorch
-- 量化
+  - pytorch
+  - 量化
 readTime: "12分钟"
 ---
 
@@ -26,60 +25,25 @@ readTime: "12分钟"
 
 ## 1. torch.fx与trt的量化对比
 
-|  | torch.fx (PyTorch 1.10) | TensorRT | PyTorch 2.x |
+| 对比项 | torch.fx (PyTorch 1.10) | TensorRT | PyTorch 2.x |
 | --- | --- | --- | --- |
 | 支持的后端 | both CPU & CUDA | CUDA | /(代表和1.10相同) |
 | 量化模式 | 静态量化、动态量化（但qat仅支持静态量化） | 静态、动态 | / |
-| 对称/非对称量化 | `torch.qscheme` — Type to describe the quantization scheme of a tensor. 
+| 对称/非对称量化 | `torch.qscheme` — 支持类型：`per_tensor_affine`(非对称)、`per_channel_affine`(非对称)、`per_tensor_symmetric`(对称)、`per_channel_symmetric`(对称) | 只有对称量化 | / |
+| per-channel/per-tensor量化 | activation：per-channel、per-tensor的非对称量化；weight：只有conv和linear算子支持per-channel，其他per-tensor | activation：per-tensor；weight：conv、deconv、fc、matmul(需要矩阵2D，且第二个input恒定）支持per-channel | / |
+| 选择scale和zero point的方式 | HistogramObserver、MinMaxObserver、MovingAverageMinMaxObserver、MovingAveragePerChannelMinMaxObserver、NoopObserver、ObserverBase、PerChannelMinMaxObserver、RecordingObserver | pytorch_quantization/calib下：Max、Histogram | / |
+| 支持的数据类型 | INT8, UINT8, INT32 | FP32, FP16, INT8, INT32, UINT8, BOOL | INT8, UINT8, INT32, FP16 |
+| qat流程 | PyTorch1.10模型没跑通(onnx导出报错)。PyTorch1.12流程：1.prepare_qat_fx(qconfig/prepare_custom_config_dict/backend_config_dict) 2.train 3.convert_fx | (yolov5) 1.qdq算子插入 2.calibrate 3.finetune | / |
+| 算子支持情况 | [PyTorch 1.10文档](https://pytorch.org/docs/1.10/quantization-support.html)，ConvTranspose可通过修改底层代码强制支持 | Conv, ConvTranspose, Linear, LSTM, LSTMCell, AvgPool, AdaptiveAvgPool | [PyTorch 2.1文档](https://pytorch.org/docs/2.1/quantization.html) |
 
-Supported types:   
- - `torch.per_tensor_affine` : per tensor, asymmetric    
-- `torch.per_channel_affine`: per channel, asymmetric
- - `torch.per_tensor_symmetric` : per tensor, symmetric
-- `torch.per_channel_symmetric` : per channel, symmetric | 只有对称量化 |  |
-| per-channel/per-tensor量化 | - activation：per-channel、per-tensor的非对称量化
-- weight：只有conv和linear算子支持per-channel，其他per-tensor | - activation：per-tensor
-- weight：conv、deconv, fc, matmul(需要矩阵2D，且第二个input恒定）支持per-channel |  |
-| 选择scale和zero point的方式 | - [torch.quantization.HistogramObserver](https://pytorch.org/docs/1.10/torch.quantization.html?highlight=observer#torch.quantization.HistogramObserver) 
-- [torch.quantization.MinMaxObserver](https://pytorch.org/docs/1.10/torch.quantization.html?highlight=observer#torch.quantization.MinMaxObserver)
-- [torch.quantization.MovingAverageMinMaxObserver](https://pytorch.org/docs/1.10/torch.quantization.html?highlight=observer#torch.quantization.MovingAverageMinMaxObserver) 
-- [torch.quantization.MovingAveragePerChannelMinMaxObserver](https://pytorch.org/docs/1.10/torch.quantization.html?highlight=observer#torch.quantization.MovingAveragePerChannelMinMaxObserver) 
-- [torch.quantization.NoopObserver](https://pytorch.org/docs/1.10/torch.quantization.html?highlight=observer#torch.quantization.NoopObserver) 
-- [torch.quantization.ObserverBase](https://pytorch.org/docs/1.10/torch.quantization.html?highlight=observer#torch.quantization.ObserverBase) 
-- [torch.quantization.PerChannelMinMaxObserver](https://pytorch.org/docs/1.10/torch.quantization.html?highlight=observer#torch.quantization.PerChannelMinMaxObserver)
-- [torch.quantization.RecordingObserver](https://pytorch.org/docs/1.10/torch.quantization.html?highlight=observer#torch.quantization.RecordingObserver) | pytorch_quantization/calib下：
-- Max
-- Histogram |  |
-| 支持的数据类型 | INT8,UINT8,INT32 | FP32, FP16, INT8, INT32, UINT8, and BOOL | INT8,UINT8,INT32,FP16 |
-| qat流程 | Pytorch1.10模型没跑通，原因是导出onnx时，会报错AttributeError: 'torch.dtype' object has no attribute 'detach'. 从issue来看，直到PyTorch1.11都没有解决好这个问题。
-
-以下是使用PyTorch1.12跑通的流程(resnet18)：
-1.quantize_fx.prepare_qat_fx
-1）使用以下字典准备qat 
-- qconfig：None代表跳过融合和量化，这个字典可以使用torch.quantization.get_default_qat_qconfig生成
-- prepare_custom_config_dict：指定单独被符号追踪的module，observer，指定不要进行符号追踪的module，fuse策略，qat的module映射，quantization策略，图输入输出的精度(默认fp32)，改写GraphModule时保留forward时不被使用的算子
-- backend_config_dict：指定后端<br>2）转torch.nn的Model为包含Observer的fx图
-2.train
-3.quantize_fx.convert_fx：train完的model去掉Observer | (yolov5)
-
-1.qdq算子插入
-- add -> QuantAdd，保证两个输入保持相同的量化状态
-- 把quant_modules._DEFAULT_QUANT_MAP中支持的算子都换成量化模块
-
-2.calibrate (这里应该对应于torch.fx的Observer)
-
-3.finetune |  |
-| 算子支持情况（对于qat来说，是否还是看部署在什么后端上） | [Quantization Operation coverage — PyTorch 1.10 documentation](https://pytorch.org/docs/1.10/quantization-support.html)
-ConvTranspose没写支持，但是可以通过修改底层代码强制支持 | Conv, ConvTranspose, Linear, LSTM, LSTMCell, AvgPool, AdaptiveAvgPool(quant_modules._DEFAULT_QUANT_MAP) | [Quantization — PyTorch 2.1 documentation](https://pytorch.org/docs/2.1/quantization.html)
-搜Operator coverage |
-- 结论
-    - 手动实现的代码量：torch.fx相对较少
-    - torch.fx的符号追踪仅追踪torch.nn中的函数
-        - 不支持的函数要用 @torch.fx.wrap 包起来
-        - 仅仅使用torch.fx，是不支持动态数据流(if-else)的【不过这里yolov5的trt qat量化是否也是因为动态控制流的原因不能确定add算子的scale？
-    - 版本问题：目前ai平台上使用的是pytorch1.10，该版本的torch.fx尚不成熟，符号追踪图的方式也有很多问题；pytorch2.0推出dynamo，允许动态追踪图，要好很多
-    - 支持的数据类型：torch.fx不支持fp16
-    - scale的确定方式：看起来是torch.fx支持的范围广一些。存疑，这个不涉及到硬件的话，那难道不是自己想per-channel就per-channel吗？为什么还要专门说明哪些算子支持不支持？而且pytorch中也有说法是支持什么看observer里是per-channel还是per-tensor
+**结论：**
+- 手动实现的代码量：torch.fx相对较少
+- torch.fx的符号追踪仅追踪torch.nn中的函数
+  - 不支持的函数要用 `@torch.fx.wrap` 包起来
+  - 仅仅使用torch.fx，是不支持动态数据流(if-else)的【不过这里yolov5的trt qat量化是否也是因为动态控制流的原因不能确定add算子的scale？
+- 版本问题：目前ai平台上使用的是pytorch1.10，该版本的torch.fx尚不成熟，符号追踪图的方式也有很多问题；pytorch2.0推出dynamo，允许动态追踪图，要好很多
+- 支持的数据类型：torch.fx不支持fp16
+- scale的确定方式：看起来是torch.fx支持的范围广一些。存疑，这个不涉及到硬件的话，那难道不是自己想per-channel就per-channel吗？为什么还要专门说明哪些算子支持不支持？而且pytorch中也有说法是支持什么看observer里是per-channel还是per-tensor
 
 ## 2. 为什么torch.fx捕捉模型图总是出错
 
@@ -95,17 +59,11 @@ ConvTranspose没写支持，但是可以通过修改底层代码强制支持 | C
 
 而追踪的方法及分析如下：
 
-|  | 符号追踪 | 即时追踪 | 动态优化 |
+| 对比项 | 符号追踪 | 即时追踪 | 动态优化 |
 | --- | --- | --- | --- |
-| 工具 | torch.fx（得到的是fx图 | torch.jit（得到的是f_traced.graph | torch.dynamo（得到的也是fx图 |
+| 工具 | torch.fx（得到的是fx图） | torch.jit（得到的是f_traced.graph） | torch.dynamo（得到的也是fx图） |
 | 原理 | 假定函数的参数都是torch.Tensor类型（只是将它作为一个抽象的整体，而不确定它的shape、dtype、device、requires_grad），使用Proxy的变量作为输入（假设为 `x` )，记录在输入参数上执行的各种操作 | 在代码跑起来的时候，根据第一个真实的输入数据进行追踪，并且会追踪预定义算子的调用。 | 在代码跑起来的时候，根据第一个真实的输入数据进行追踪。而且会使用python解释器提供的api，劫持全部的函数调用，分析字节码并从中获取计算图及设置守卫条件。 |
-| 计算图难题上的表现 | 1. error   
-2. error     
-3. slient failure | 1. error     
-2. error    
-3. slient failure | 1. pass     
-2. pass    
-3. pass🌟 |
+| 计算图难题上的表现 | 1.error 2.error 3.silent failure | 1.error 2.error 3.silent failure | 1.pass 2.pass 3.pass🌟 |
 
 ## 3. torch.fx图捕获可行方法
 
@@ -116,10 +74,10 @@ ConvTranspose没写支持，但是可以通过修改底层代码强制支持 | C
         import torch  
         import torch.nn as nn  
         import torch.optim as optim
-        
+
         from torch.quantization import quantize_fx
           
-        
+
         input_size = 784  
         hidden_size = 500  
         output_size = 10  
@@ -130,12 +88,12 @@ ConvTranspose没写支持，但是可以通过修改底层代码强制支持 | C
           
         x = torch.randn(batch_size, input_size)  
         y = torch.randint(0, output_size, (batch_size,))  
-        
+
         @torch.fx.wrap
         def wrap_kwargs(kwargs_dict):
             if 'iter' in kwargs_dict:
                 pass
-        
+
         def wrap_x(x):
             for tensor in x.shape[1]:
                 print(tensor)
@@ -219,21 +177,21 @@ ConvTranspose没写支持，但是可以通过修改底层代码强制支持 | C
             #     return out
           
         model = Net(input_size, hidden_size, output_size)
-        
+
         #------------ new load model param -----------
         # net = torch.load(cfg.model_path, map_location=torch.device('cuda'))
         # model.load_state_dict(net['state_dict'])
         #--------------------- end -------------------
-        
+
         #------------------ fx qconfig & prepare------------------
         qconfig_dict={"":torch.quantization.get_default_qat_qconfig('qnnpack')} 
         model = quantize_fx.prepare_qat_fx(model, qconfig_dict)
         #-------------------------- end --------------------------
-        
+
         criterion = nn.CrossEntropyLoss()  
         optimizer = optim.SGD(model.parameters(), lr=learning_rate)  
           
-        
+
         for epoch in range(num_epochs):  
               
             outputs = model(x)  
@@ -246,7 +204,7 @@ ConvTranspose没写支持，但是可以通过修改底层代码强制支持 | C
               
             if (epoch+1) % 1 == 0:  
                 print ('Epoch [{}/{}], Loss: {:.4f}'.format(epoch+1, num_epochs, loss.item()))
-        
+
         #------------------ fx convert & export ------------------
         model_quantized=quantize_fx.convert_fx(model)
         torch.save(model_quantized.state_dict(), 'fx_model.pth')
@@ -262,7 +220,7 @@ ConvTranspose没写支持，但是可以通过修改底层代码强制支持 | C
           (relu): ReLU()
           (fc2): Linear(in_features=500, out_features=10, bias=True)
         )
-        
+
         ## after
         print(model)
         GraphModule(
@@ -293,10 +251,10 @@ ConvTranspose没写支持，但是可以通过修改底层代码强制支持 | C
             (activation_post_process): MovingAverageMinMaxObserver(min_val=inf, max_val=-inf)
           )
         )
-        
+
         torch.fx._symbolic_trace.wrap("__main___wrap_kwargs")
         torch.fx._symbolic_trace.wrap("__main___wrap_x")
-        
+
         def forward(self, x, kwargs_dict):
             x_activation_post_process_0 = self.x_activation_post_process_0(x)
             wrap_kwargs = __main___wrap_kwargs(kwargs_dict)

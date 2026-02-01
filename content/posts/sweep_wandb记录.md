@@ -1,4 +1,3 @@
-
 ---
 title: "sweep_wandb记录"
 date: "2022-05-10"
@@ -6,7 +5,7 @@ author: "NeysaBan"
 category: "wandb"
 excerpt: "深度学习搜索最优参数"
 tags:
-- DL
+ - DL   
 readTime: "3分钟"
 ---
 
