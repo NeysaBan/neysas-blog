@@ -111,11 +111,7 @@ export async function markdownToHtml(markdown: string): Promise<string> {
     .use(remarkGfm) // 支持 GFM（表格、任务列表等）
     .use(remarkMath) // 支持数学公式语法
     .use(remarkRehype, { allowDangerousHtml: true }) // 转换为 rehype AST
-    .use(rehypeKatex, {
-      strict: false, // 宽松模式，忽略未知命令
-      throwOnError: false, // 不抛出错误
-      output: 'html', // 输出 HTML
-    })
+    .use(rehypeKatex)
     .use(rehypePrismPlus, { 
       ignoreMissing: true,  // 忽略未知语言
       showLineNumbers: false // 不显示行号
