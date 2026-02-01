@@ -1,5 +1,5 @@
 ---
-title: "和 AI 一起 coding : 向下管理的艺术"
+title: "像带校招新人一样和 AI 一起编程"
 date: "2026-02-01"
 author: "Neysa"
 category: "Agent"
@@ -8,8 +8,6 @@ tags:
 readTime: "8分钟"
 views: 0
 ---
-
-# 像带校招新人一样和 AI 一起编程
 
 ## 一个类比
 
