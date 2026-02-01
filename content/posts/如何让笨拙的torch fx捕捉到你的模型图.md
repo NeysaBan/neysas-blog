@@ -4,8 +4,8 @@ date: "2024-01-19"
 author: "NeysaBan"
 category: "量化"
 tags:
-  - pytorch
-  - 量化
+ - pytorch
+ - 量化
 readTime: "12分钟"
 ---
 
